@@ -2,3 +2,25 @@
 GET http://localhost:8080/ping
 
 ###
+GET http://localhost:8080/me/49
+
+###
+GET http://localhost:8080/me/49/58
+
+###
+POST http://localhost:8080/me
+Content-Type: application/json
+
+{
+    "email": "ankitbourasi0@gmail.com",
+    "password": "123"
+}
+
+###
+POST http://localhost:8080/me/id
+Content-Type: application/json
+
+{
+  "email": "",
+  "password": "123"
+}

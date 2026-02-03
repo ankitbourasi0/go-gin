@@ -9,19 +9,76 @@ import (
 
 func main() {
 	// Create a Gin router with default middleware (logger and recovery)
-	r := gin.Default()
+	router := gin.Default()
 
-	// Define a simple GET endpoint
-	r.GET("/ping", func(c *gin.Context) {
+	router.GET("/ping", func(c *gin.Context) {
 		// Return JSON response
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
 	})
 
-	// Start server on port 8080 (default)
-	// Server will listen on 0.0.0.0:8080 (localhost:8080 on Windows)
-	if err := r.Run(); err != nil {
+	router.GET("/me/:id", func(c *gin.Context) {
+		var id = c.Param("id")
+
+		c.JSON(http.StatusOK, gin.H{
+			"user_id": id,
+		})
+	})
+
+	router.GET("/me/:id/:userId", func(c *gin.Context) {
+		var id = c.Param("id")
+		var userId = c.Param("userId")
+
+		c.JSON(http.StatusOK, gin.H{
+			"id":      id,
+			"user_id": userId,
+		})
+	})
+
+	router.POST("/me", func(c *gin.Context) {
+		//1. What you want?  - EMAIL, PASSWORD
+
+		//2. define the  type with
+		type MeRequest struct { //json request format of client
+			Email    string `json:"email"`
+			Password string `json:"password"`
+		}
+		//3. create a var of your request type
+		var meRequest MeRequest
+		//4. bind request with variable pointer
+		c.BindJSON(&meRequest)
+
+		//5.return the response,
+		c.JSON(http.StatusOK, gin.H{
+			//response
+			"email":    meRequest.Email,
+			"password": meRequest.Password,
+		})
+	})
+
+	router.POST("/me/id", func(c *gin.Context) {
+
+		type MeRequest struct { // 1. email is required
+			Email    string `json:"email" binding:"required"`
+			Password string `json:"password"`
+		}
+		var meRequest MeRequest
+		//validate
+		if err := c.BindJSON(&meRequest); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"email":    meRequest.Email,
+			"password": meRequest.Password,
+		})
+	})
+
+	if err := router.Run(); err != nil {
 		log.Fatalf("failed to run server: %v", err)
 	}
 }
