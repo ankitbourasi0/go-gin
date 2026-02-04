@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"gin-tutorial/controllers"
+	"gin-tutorial/internal/database"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -10,6 +12,14 @@ import (
 func main() {
 	// Create a Gin router with default middleware (logger and recovery)
 	router := gin.Default()
+
+	db := internal.InitDatabase()
+
+	if db == nil {
+		fmt.Println("Database initialization failed!!!")
+	}
+
+	fmt.Println("Database Initialization Successful", db)
 	//
 	//router.GET("/ping", func(c *gin.Context) {
 	//	// Return JSON response

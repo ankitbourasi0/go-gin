@@ -1,0 +1,12 @@
+version: "3.2"
+services:
+  db:
+      container_name: postgres_db_gin
+      image: postgres:16.11-alpine3.23
+      restart: always
+      ports:
+        - '5440:5432'
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DB=postgres
