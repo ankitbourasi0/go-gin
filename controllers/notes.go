@@ -2,9 +2,14 @@ package controllers
 
 //Instead of writing a lot of Routes we just categorize them into Controller
 //This is an easy way to manage a lot of Routes in a Controller in future
-import "github.com/gin-gonic/gin"
+import (
+	"gin-tutorial/services"
+
+	"github.com/gin-gonic/gin"
+)
 
 type NotesController struct {
+	notesService services.NotesService
 }
 
 func (n *NotesController) NewNotesController(router *gin.Engine) {
@@ -14,6 +19,7 @@ func (n *NotesController) NewNotesController(router *gin.Engine) {
 
 	notes.GET("/", n.GetNumberOfNotes())
 	notes.POST("/", n.CreateNotes())
+	notes.GET("/getFromService", n.GetDataFromNotesService())
 }
 
 func (n *NotesController) CreateNotes() gin.HandlerFunc {
@@ -28,6 +34,14 @@ func (n *NotesController) GetNumberOfNotes() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "5 Notes in the DB",
+		})
+	}
+}
+
+func (n *NotesController) GetDataFromNotesService() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": n.notesService.GetNotes(),
 		})
 	}
 }
