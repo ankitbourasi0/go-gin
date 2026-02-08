@@ -58,8 +58,12 @@ func (n *NotesController) GetNumberOfNotes() gin.HandlerFunc {
 
 func (n *NotesController) GetDataFromNotesService() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		notes, err := n.notesService.GetNotes()
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		}
 		c.JSON(200, gin.H{
-			"message": n.notesService.GetNotes(),
+			"message": notes,
 		})
 	}
 }

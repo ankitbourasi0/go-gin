@@ -64,6 +64,10 @@ POST http://localhost:8080/notes
 POST http://localhost:8080/notes
 Content-Type: application/json
 
-{ "title" : "first note",
-    "status" : true
+{ "title" : "thrid  note",
+    "status" : false
 }
+
+### Get data from database
+GET http://localhost:8080/notes/getFromService
+
