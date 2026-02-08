@@ -59,3 +59,11 @@ GET http://localhost:8080/notes/getFromService
 
 ### Create notes in Database
 POST http://localhost:8080/notes
+
+### Create notes in DB, data coming from Frontend
+POST http://localhost:8080/notes
+Content-Type: application/json
+
+{ "title" : "first note",
+    "status" : true
+}

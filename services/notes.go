@@ -3,6 +3,7 @@ package services
 import (
 	"fmt"
 	"gin-tutorial/internal/models"
+
 	"gorm.io/gorm"
 )
 
@@ -32,13 +33,17 @@ func (n *NotesService) GetNotes() []Note {
 	return data
 }
 
-// create notes in database
-func (n *NotesService) CreateNotes() string {
-	err := n.db.Create(&internal.Notes{Id: 1, Title: "test", Status: true}).Error
+// create notes in db, data coming from frontend
+func (n *NotesService) CreateNotes(title string, status bool) (*internal.Notes, error) {
+	note := &internal.Notes{
+		Title:  title,
+		Status: status,
+	}
+	err := n.db.Create(note).Error
 	if err != nil {
 		fmt.Println(err)
-		return ""
+		return nil, err
 	}
-	return "Notes Create Successfully"
-	
+	return note, nil
+
 }

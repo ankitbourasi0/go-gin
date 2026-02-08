@@ -4,6 +4,7 @@ package controllers
 //This is an easy way to manage a lot of Routes in a Controller in future
 import (
 	"gin-tutorial/services"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,13 +25,25 @@ func (n *NotesController) NewNotesController(router *gin.Engine, notesService se
 }
 
 func (n *NotesController) CreateNotes() gin.HandlerFunc {
+	type NoteBody struct {
+		Title  string `json:"title"`
+		Status bool   `json:"status"`
+	}
+
 	return func(c *gin.Context) {
-		result := n.notesService.CreateNotes()
-		if result == "" {
-			c.JSON(500, gin.H{"error": "failed to create note  "})
+		var noteBody NoteBody
+		//parse the request body in NoteBody
+		if err := c.BindJSON(&noteBody); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		note, err := n.notesService.CreateNotes(noteBody.Title, noteBody.Status)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		}
 		c.JSON(200, gin.H{
-			"message": result,
+			"message": "Note Created",
+			"data":    note,
 		})
 	}
 }
