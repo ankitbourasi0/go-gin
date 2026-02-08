@@ -55,3 +55,7 @@ POST http://localhost:8080/notes
 
 ### Get Data from Service
 GET http://localhost:8080/notes/getFromService
+
+
+### Create notes in Database
+POST http://localhost:8080/notes

@@ -12,7 +12,7 @@ type NotesController struct {
 	notesService services.NotesService
 }
 
-func (n *NotesController) NewNotesController(router *gin.Engine) {
+func (n *NotesController) NewNotesController(router *gin.Engine, notesService services.NotesService) {
 	//Group Create a new router group,
 	//You should add all the routes that have common middlewares or the same path prefix.
 	notes := router.Group("/notes")
@@ -20,12 +20,17 @@ func (n *NotesController) NewNotesController(router *gin.Engine) {
 	notes.GET("/", n.GetNumberOfNotes())
 	notes.POST("/", n.CreateNotes())
 	notes.GET("/getFromService", n.GetDataFromNotesService())
+	n.notesService = notesService
 }
 
 func (n *NotesController) CreateNotes() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		result := n.notesService.CreateNotes()
+		if result == "" {
+			c.JSON(500, gin.H{"error": "failed to create note  "})
+		}
 		c.JSON(200, gin.H{
-			"message": "Notes Created",
+			"message": result,
 		})
 	}
 }

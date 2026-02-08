@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"gin-tutorial/controllers"
 	"gin-tutorial/internal/database"
+	"gin-tutorial/services"
+
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -20,7 +22,12 @@ func main() {
 	}
 
 	fmt.Println("Database Initialization Successful", db)
-	//
+
+	//Access notes service
+	notesService := &services.NotesService{}
+	//Calling DB Initialize METHOD
+	notesService.InitService(db)
+
 	//router.GET("/ping", func(c *gin.Context) {
 	//	// Return JSON response
 	//	c.JSON(http.StatusOK, gin.H{
@@ -144,7 +151,7 @@ func main() {
 	//1.You can assume you are accessing a Class(NotesController) via package(controllers)
 	notesController := &controllers.NotesController{}
 	//2.And Access each method of the class as shown below!
-	notesController.NewNotesController(router)
+	notesController.NewNotesController(router, *notesService)
 
 	if err := router.Run(); err != nil {
 		log.Fatalf("failed to run server: %v", err)
