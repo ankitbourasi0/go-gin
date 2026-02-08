@@ -25,9 +25,9 @@ type Note struct {
 	Name string
 }
 
-func (n *NotesService) GetNotes() ([]*internal.Notes, error) {
+func (n *NotesService) GetNotes(status bool) ([]*internal.Notes, error) {
 	var notes []*internal.Notes
-	if err := n.db.Find(&notes).Error; err != nil {
+	if err := n.db.Where("status = ?", status).Find(&notes).Error; err != nil {
 		fmt.Println(err)
 		return nil, err
 	}

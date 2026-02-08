@@ -5,6 +5,7 @@ package controllers
 import (
 	"gin-tutorial/services"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -57,8 +58,16 @@ func (n *NotesController) GetNumberOfNotes() gin.HandlerFunc {
 }
 
 func (n *NotesController) GetDataFromNotesService() gin.HandlerFunc {
+
 	return func(c *gin.Context) {
-		notes, err := n.notesService.GetNotes()
+		status := c.Query("status")
+		actualStatus, err := strconv.ParseBool(status)
+
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		}
+
+		notes, err := n.notesService.GetNotes(actualStatus)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		}
