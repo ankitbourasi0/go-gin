@@ -66,3 +66,18 @@ func (n *NotesService) UpdateNotes(title string, status bool, id int) (*internal
 	}
 	return &note, nil
 }
+
+func (n *NotesService) DeleteNotes(id int64) error {
+	var note internal.Notes
+	if err := n.db.Where("id = ?", id).First(&note).Error; err != nil {
+
+		fmt.Println("Delete note :Error in fetching ", err)
+
+		return err
+	}
+	if err := n.db.Where("id = ?", id).Delete(note).Error; err != nil {
+		fmt.Println("Delete Notes : Error in Deleting", err)
+		return err
+	}
+	return nil
+}

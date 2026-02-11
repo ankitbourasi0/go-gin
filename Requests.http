@@ -82,3 +82,6 @@ Content-Type: application/json
   "status" : true,
   "id": 1
 }
+
+### Delete in database
+DELETE http://localhost:8080/notes/2

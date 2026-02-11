@@ -24,6 +24,7 @@ func (n *NotesController) NewNotesController(router *gin.Engine, notesService se
 	notes.GET("/getFromService", n.GetDataFromNotesService())
 	n.notesService = notesService
 	notes.PUT("/", n.UpdateNotes())
+	notes.DELETE("/:id", n.DeleteNotes())
 
 }
 
@@ -102,4 +103,22 @@ func (n *NotesController) UpdateNotes() gin.HandlerFunc {
 
 	}
 
+}
+
+func (n *NotesController) DeleteNotes() gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+		id := c.Param("id")
+		noteId, err := strconv.ParseInt(id, 10, 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		err = n.notesService.DeleteNotes(noteId)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(200, gin.H{"message": "Note Deleted Successfully"})
+	}
 }
