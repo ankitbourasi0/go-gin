@@ -64,8 +64,8 @@ POST http://localhost:8080/notes
 POST http://localhost:8080/notes
 Content-Type: application/json
 
-{ "title" : "thrid  note",
-    "status" : false
+{ "title" : "second  note",
+    "status" : true
 }
 
 ### Get data from database
@@ -73,3 +73,12 @@ GET http://localhost:8080/notes/getFromService
 
 ### Get data from database based on path params
 GET http://localhost:8080/notes/getFromService?status=false
+
+### Update in database
+PUT http://localhost:8080/notes/
+Content-Type: application/json
+
+{ "title" : "first  note changing status",
+  "status" : true,
+  "id": 1
+}

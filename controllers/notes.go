@@ -23,6 +23,8 @@ func (n *NotesController) NewNotesController(router *gin.Engine, notesService se
 	notes.POST("/", n.CreateNotes())
 	notes.GET("/getFromService", n.GetDataFromNotesService())
 	n.notesService = notesService
+	notes.PUT("/", n.UpdateNotes())
+
 }
 
 func (n *NotesController) CreateNotes() gin.HandlerFunc {
@@ -75,4 +77,29 @@ func (n *NotesController) GetDataFromNotesService() gin.HandlerFunc {
 			"message": notes,
 		})
 	}
+}
+
+func (n *NotesController) UpdateNotes() gin.HandlerFunc {
+	type NoteBody struct {
+		Title  string `json:"title" binding:"required"`
+		Status bool   `json:"status"`
+		Id     int    `json:"id" binding:"required"`
+	}
+	return func(c *gin.Context) {
+		var noteBody NoteBody
+		if err := c.BindJSON(&noteBody); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		note, err := n.notesService.UpdateNotes(noteBody.Title, noteBody.Status, noteBody.Id)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(200, gin.H{"message": note})
+
+	}
+
 }

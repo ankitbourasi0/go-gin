@@ -48,3 +48,21 @@ func (n *NotesService) CreateNotes(title string, status bool) (*internal.Notes, 
 	return note, nil
 
 }
+
+func (n *NotesService) UpdateNotes(title string, status bool, id int) (*internal.Notes, error) {
+	var note internal.Notes
+
+	if err := n.db.Where("id = ?", id).First(&note).Error; err != nil {
+
+		fmt.Println("Update note :Error in fetching ", err)
+
+		return nil, err
+	}
+	note.Title = title
+	note.Status = status
+	if err := n.db.Save(&note).Error; err != nil {
+		fmt.Println("Update note :Error in Saving ", err)
+		return nil, err
+	}
+	return &note, nil
+}
