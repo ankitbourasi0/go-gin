@@ -1,78 +1,17 @@
-### GET request to example server
-GET http://localhost:8080/ping
-
-###
-GET http://localhost:8080/me/49
-
-###
-GET http://localhost:8080/me/49/58
-
-###
-POST http://localhost:8080/me
-Content-Type: application/json
-
-{
-    "email": "ankitbourasi0@gmail.com",
-    "password": "123"
-}
-
-### Replace Entire Object
-POST http://localhost:8080/me/id
-Content-Type: application/json
-
-{
-  "email": "",
-  "password": "123"
-}
-
-###
-PUT http://localhost:8080/me
-Content-Type: application/json
-
-{
-  "email": "",
-  "password": "123"
-}
-
-### Replace Some Part of the Object
-PATCH http://localhost:8080/me
-Content-Type: application/json
-
-{
-  "email": "",
-  "password": "123"
-}
-
-###
-DELETE http://localhost:8080/me/24
-
-
-### Request on Controller
-GET http://localhost:8080/notes
-###
-POST http://localhost:8080/notes
-
-
-### Get Data from Service
-GET http://localhost:8080/notes/getFromService
-
-
-### Create notes in Database
-POST http://localhost:8080/notes
-
 ### Create notes in DB, data coming from Frontend
 POST http://localhost:8080/notes
 Content-Type: application/json
 
-{ "title" : "second  note",
-    "status" : true
+{
+  "title" : "false  note",
+    "status" : false
 }
 
 ### Get data from database
-GET http://localhost:8080/notes/getFromService
+GET http://localhost:8080/notes/
 
 ### Get data from database based on path params
-GET http://localhost:8080/notes/getFromService?status=false
+GET http://localhost:8080/notes?status=false
 
 ### Update in database
 PUT http://localhost:8080/notes/

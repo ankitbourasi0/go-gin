@@ -14,18 +14,17 @@ type NotesController struct {
 	notesService services.NotesService
 }
 
-func (n *NotesController) NewNotesController(router *gin.Engine, notesService services.NotesService) {
-	//Group Create a new router group,
-	//You should add all the routes that have common middlewares or the same path prefix.
-	notes := router.Group("/notes")
-
-	notes.GET("/", n.GetNumberOfNotes())
-	notes.POST("/", n.CreateNotes())
-	notes.GET("/getFromService", n.GetDataFromNotesService())
+func (n *NotesController) InitController(notesService services.NotesService) *NotesController {
 	n.notesService = notesService
+	return n
+}
+
+func (n *NotesController) InitRoutes(router *gin.Engine) {
+	notes := router.Group("/notes")
+	notes.POST("/", n.CreateNotes())
+	notes.GET("/", n.GetDataFromNotesService())
 	notes.PUT("/", n.UpdateNotes())
 	notes.DELETE("/:id", n.DeleteNotes())
-
 }
 
 func (n *NotesController) CreateNotes() gin.HandlerFunc {
@@ -52,22 +51,18 @@ func (n *NotesController) CreateNotes() gin.HandlerFunc {
 	}
 }
 
-func (n *NotesController) GetNumberOfNotes() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "5 Notes in the DB",
-		})
-	}
-}
-
 func (n *NotesController) GetDataFromNotesService() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		status := c.Query("status")
-		actualStatus, err := strconv.ParseBool(status)
-
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		var actualStatus *bool
+		if status != "" {
+			as, err := strconv.ParseBool(status)
+			actualStatus = &as
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				return
+			}
 		}
 
 		notes, err := n.notesService.GetNotes(actualStatus)
