@@ -24,3 +24,14 @@ Content-Type: application/json
 
 ### Delete in database
 DELETE http://localhost:8080/notes/2
+
+
+
+### Auth Register
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+  "email" : "ankitbourasi0@gmail.com",
+  "password" : "123"
+}

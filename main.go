@@ -5,7 +5,6 @@ import (
 	"gin-tutorial/controllers"
 	"gin-tutorial/internal/database"
 	"gin-tutorial/services"
-
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -22,9 +21,19 @@ func main() {
 	notesController := &controllers.NotesController{} //Access CONTROLLER
 	notesController.InitController(*notesService)     //Controller Initialize
 	notesController.InitRoutes(router)                // Routes Initialize
+
+	//Auth Service
+	authService := &services.AuthService{}
+	authService.InitAuthService(db)
+	//Auth Controller
+	authController := &controllers.AuthContrller{}
+	authController = authController.InitAuthController(*authService)
+	authController.InitRoutes(router)
+
 	if err := router.Run(); err != nil {
 		log.Fatalf("failed to run server: %v", err)
 	}
+
 }
 
 func DatabaseInit() *gorm.DB {
