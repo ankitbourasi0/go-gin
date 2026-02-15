@@ -25,7 +25,9 @@ func (a *AuthService) Login(email *string, password *string) (*internal.User, er
 	if err := a.db.Where("email = ?", email).Where("password = ?", password).First(&user).Error; err != nil {
 		return nil, err
 	}
-
+	if user.Email == "" {
+		return nil, errors.New("No user found with email and password")
+	}
 	return &user, nil
 
 }
